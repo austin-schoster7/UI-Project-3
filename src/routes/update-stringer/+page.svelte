@@ -1,43 +1,47 @@
 <script>
-    import { profiles } from '$lib/stores';
-    import { onMount } from 'svelte';
-    import { goto } from '$app/navigation';
-    import Header from '$lib/Header.svelte';
-  
-    let selectedProfileIndex = null;
-    let name = '';
-    let experienceLevel = '';
-    let email = '';
-    let heightFeet = '';
-    let heightInches = '';
-    let unit = 'lbs';
-  
-    $: if (selectedProfileIndex !== null) {
-      const profile = $profiles[selectedProfileIndex];
-      if (profile) {
-        name = profile.name;
-        experienceLevel = profile.experienceLevel;
-        email = profile.email;
-        heightFeet = profile.height.feet;
-        heightInches = profile.height.inches;
-        unit = profile.unit;
-      }
-    }
-  
-    function updateProfile() {
-      profiles.update((profileList) => {
-        const updatedList = [...profileList];
-        updatedList[selectedProfileIndex] = {
-          name,
-          experienceLevel,
-          email,
-          height: { feet: heightFeet, inches: heightInches },
-          unit
-        };
-        return updatedList;
-      });
-      goto('/'); // Navigate back to the main page after updating
-    }
+	import { profiles, selectedProfileIndex } from '$lib/stores';
+	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
+	import Header from '$lib/Header.svelte';
+
+	let name = '';
+	let experienceLevel = '';
+	let email = '';
+	let heightFeet = '';
+	let heightInches = '';
+	let unit = 'lbs';
+
+	// Load the selected profile's data on mount
+	onMount(() => {
+		selectedProfileIndex.subscribe((index) => {
+			if (index !== null) {
+				const profile = $profiles[index];
+				if (profile) {
+					name = profile.name;
+					experienceLevel = profile.experienceLevel;
+					email = profile.email;
+					heightFeet = profile.height.feet;
+					heightInches = profile.height.inches;
+					unit = profile.unit;
+				}
+			}
+		});
+	});
+
+	function updateProfile() {
+		profiles.update((profileList) => {
+			const updatedList = [...profileList];
+			updatedList[$selectedProfileIndex] = {
+				name,
+				experienceLevel,
+				email,
+				height: { feet: heightFeet, inches: heightInches },
+				unit
+			};
+			return updatedList;
+		});
+		goto('/'); // Navigate back to the main page after updating
+	}
 </script>
 
 <style>
@@ -100,14 +104,6 @@
 
 <div class="form-container">
     <h2>Update Stringer Profile</h2>
-  
-    <label>Select Stringer</label>
-    <select bind:value={selectedProfileIndex}>
-      <option value={null}>Select a stringer</option>
-      {#each $profiles as profile, index}
-        <option value={index}>{profile.name}</option>
-      {/each}
-    </select>
   
     <label>Name</label>
     <input bind:value={name} type="text" placeholder="Enter name" />

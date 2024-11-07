@@ -1,6 +1,16 @@
 <script>
 	import { goto } from '$app/navigation';
 	import Header from '$lib/Header.svelte';
+	import { selectedProfile } from '../../lib/stores';
+    import { onMount } from 'svelte';
+
+	let profileData;
+
+    onMount(() => {
+        selectedProfile.subscribe(profile => {
+            profileData = profile;
+        });
+    });
 
 	let tension = 55.0;
 
@@ -16,6 +26,10 @@
 <Header />
 
 <div class="main-menu">
+	<div class="welcome">
+		<h1>Welcome {profileData ? profileData.name : ''}</h1>
+	</div>
+	<br>
 	<!-- Increment and Decrement Arrows for each place value -->
 	<div class="tension-controls">
 		<div class="tension-column">
@@ -67,6 +81,13 @@
 		height: 80vh;
 		background-color: #f5f5f5;
 		padding: 2rem;
+	}
+
+	.welcome {
+		font-size: 2rem;
+		font-weight: bold;
+		color: #333;
+		margin-bottom: 2rem;
 	}
 
 	.tension-controls {
