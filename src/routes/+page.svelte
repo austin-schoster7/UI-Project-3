@@ -34,6 +34,9 @@
 
 	<h2>Stringer Profiles</h2>
 	<div class="profile-grid">
+    {#if $profiles.length === 0}
+      <p>No profiles found. Click "New Stringer" to create a new profile.</p>
+    {/if}
 		{#each $profiles as profile, index}
 			<div class="profile-card" on:click={selectStringer(profile)}>
 				<div class="profile-name">{profile.name}</div>
