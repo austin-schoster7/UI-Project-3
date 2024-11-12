@@ -10,6 +10,7 @@
 	let heightFeet = '';
 	let heightInches = '';
 	let unit = 'lbs';
+	let nameError = ''; // Variable to store error message for name
 
 	// Load the selected profile's data on mount
 	onMount(() => {
@@ -29,6 +30,15 @@
 	});
 
 	function updateProfile() {
+		// Check if name is empty
+		if (!name.trim()) {
+			nameError = 'Name is required';
+			return;
+		}
+		
+		// Clear the error if the name is valid
+		nameError = '';
+		
 		profiles.update((profileList) => {
 			const updatedList = [...profileList];
 			updatedList[$selectedProfileIndex] = {
@@ -65,7 +75,12 @@
       font-size: 0.9rem;
       color: #666;
     }
-  
+
+    .required-asterisk {
+      color: #ff5722; /* Red color for the asterisk */
+      margin-left: 2px;
+    }
+
     input, select {
       width: 100%;
       padding: 10px;
@@ -98,6 +113,13 @@
     .button:hover {
       background-color: #357ABD;
     }
+
+    .error-message {
+      color: #ff5722;
+      font-size: 0.9rem;
+      margin-top: -10px;
+      margin-bottom: 15px;
+    }
 </style>
   
 <Header />
@@ -105,8 +127,13 @@
 <div class="form-container">
     <h2>Update Stringer Profile</h2>
   
-    <label>Name</label>
+    <label>
+      Name <span class="required-asterisk">*</span>
+    </label>
     <input bind:value={name} type="text" placeholder="Enter name" />
+    {#if nameError}
+      <div class="error-message">{nameError}</div>
+    {/if}
   
     <label>Experience Level</label>
     <input bind:value={experienceLevel} type="text" placeholder="Enter experience level" />
@@ -128,4 +155,3 @@
   
     <button class="button" on:click={updateProfile}>Update Profile</button>
 </div>
-  
