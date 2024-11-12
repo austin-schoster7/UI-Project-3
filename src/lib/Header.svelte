@@ -1,5 +1,6 @@
 <script>
 	import { goto } from '$app/navigation';
+  import { profiles } from '../lib/stores'
 
 	function goHome() {
 		goto('/');
@@ -8,6 +9,37 @@
 	function openSettings() {
 		goto('/settings');
 	}
+
+  let imageUploadButton;
+  const triggerFileInput = () => {
+    imageUploadButton.click();
+  };
+
+  const handleFileChange = (event) => {
+    const profilecsv = new FileReader();
+    
+    profilecsv.onload = (e) => {
+      const text = e.target.result;
+      const lines = text.split('\r\n');
+      lines.pop();
+
+      lines.forEach(element => {
+        const profileData = element.split(',');
+
+        let newProfile = {
+          name: profileData[0],
+          experienceLevel: profileData[1],
+          email: profileData[2],
+          height: { feet: profileData[3], inches: profileData[4] },
+          unit: profileData[5]
+        };
+
+        profiles.update((profileList) => [...profileList, newProfile]);
+      });
+    };
+
+    profilecsv.readAsText(event.target.files[0]);
+  };
 </script>
 
 <div class="header">
@@ -15,6 +47,8 @@
 	<div class="button-group">
 		<button on:click={goHome}>Home</button>
 		<button on:click={openSettings}>Settings</button>
+    <input type="file" bind:this={imageUploadButton} on:change={handleFileChange} accept=".csv*" id = "profileInputValue" style="display: none;"/>
+		<button on:click={triggerFileInput} id = "profileButton">Upload Profiles</button>
 	</div>
 </div>
 
