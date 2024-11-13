@@ -1,6 +1,6 @@
 <script>
 	import { goto } from '$app/navigation';
-  import { profiles } from '../lib/stores'
+  	import { profiles } from '../lib/stores'
 	import { page } from '$app/stores';
 
 	function goHome() {
@@ -8,15 +8,15 @@
 	}
 
 	function openSettings() {
-		goto('/settings');
+		goto('/update-stringer');
 	}
 
-  let imageUploadButton;
-  const triggerFileInput = () => {
-    imageUploadButton.click();
-  };
+	let imageUploadButton;
+	const triggerFileInput = () => {
+		imageUploadButton.click();
+	};
 
-  const handleFileChange = (event) => {
+  	const handleFileChange = (event) => {
     const profilecsv = new FileReader();
     
     profilecsv.onload = (e) => {
@@ -54,7 +54,7 @@
 		{#if $page.url.pathname === '/stringing-menu'}
 			<button on:click={openSettings} class="settings-button">
 				<!-- <img src="/settings.jpg" alt="Settings" class="settings-icon" /> -->
-				Settings
+				Profile Settings
 			</button>
 		{/if}
 		<input type="file" bind:this={imageUploadButton} on:change={handleFileChange} accept=".csv*" id = "profileInputValue" style="display: none;"/>
