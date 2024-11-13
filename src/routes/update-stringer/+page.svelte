@@ -52,6 +52,14 @@
 		});
 		goto('/'); // Navigate back to the main page after updating
 	}
+
+  function deleteProfile() {
+    profiles.update(currentProfiles => {
+      currentProfiles.splice($selectedProfileIndex, 1);
+      return currentProfiles;
+    });
+    goto('/');
+  }
 </script>
 
 <style>
@@ -125,6 +133,7 @@
 <Header />
 
 <div class="form-container">
+    <button class="button" on:click={deleteProfile} style="background-color: red;">Delete Profile</button>
     <h2>Update Stringer Profile</h2>
   
     <label>
