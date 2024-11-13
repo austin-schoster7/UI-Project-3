@@ -10,7 +10,7 @@
 	// Function to navigate to the stringing menu when a profile card is clicked
 	function selectStringer(profile) {
 		selectedProfile.set(profile);
-    goto('/stringing-menu');
+    	goto('/stringing-menu');
 	}
 
 	// Function to navigate to the new stringer page
