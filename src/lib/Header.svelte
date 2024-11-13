@@ -1,6 +1,7 @@
 <script>
 	import { goto } from '$app/navigation';
   import { profiles } from '../lib/stores'
+	import { page } from '$app/stores';
 
 	function goHome() {
 		goto('/');
@@ -45,10 +46,18 @@
 <div class="header">
 	<span class="header-title">Stringing Machine</span>
 	<div class="button-group">
-		<button on:click={goHome}>Home</button>
-		<button on:click={openSettings}>Settings</button>
-    <input type="file" bind:this={imageUploadButton} on:change={handleFileChange} accept=".csv*" id = "profileInputValue" style="display: none;"/>
 		<button on:click={triggerFileInput} id = "profileButton">Upload Profiles</button>
+		<button on:click={goHome}>
+			<!-- <img src="/profile.png" alt="View Profiles" class="settings-icon" /> -->
+			View Profiles
+		</button>
+		{#if $page.url.pathname === '/stringing-menu'}
+			<button on:click={openSettings} class="settings-button">
+				<!-- <img src="/settings.jpg" alt="Settings" class="settings-icon" /> -->
+				Settings
+			</button>
+		{/if}
+		<input type="file" bind:this={imageUploadButton} on:change={handleFileChange} accept=".csv*" id = "profileInputValue" style="display: none;"/>
 	</div>
 </div>
 
@@ -68,13 +77,19 @@
 		font-weight: 500;
 	}
 
+	.button-group {
+		display: flex;
+		gap: 10px;
+	}
+
 	.button-group button {
+		display: flex;
+		align-items: center;
 		background-color: #fff;
 		color: #4a90e2;
 		border: none;
 		border-radius: 5px;
 		padding: 8px 16px;
-		margin-left: 10px;
 		cursor: pointer;
 		font-size: 1rem;
 		transition: background-color 0.3s ease;
@@ -82,5 +97,20 @@
 
 	.button-group button:hover {
 		background-color: #e0f0ff;
+	}
+
+	/* Specific styling for the settings button */
+	.settings-button {
+		background: none;
+		background-color: none;
+		border: none;
+		padding: 0;
+		cursor: pointer;
+	}
+
+	/* Larger settings icon without any padding or white background */
+	.settings-icon {
+		width: 30px; /* Adjust size as needed */
+		height: 30px;
 	}
 </style>
