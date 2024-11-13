@@ -11,8 +11,9 @@
 	let heightInches = '';
 	let unit = 'lbs';
 	let nameError = '';
-	let volume = 50; // Default volume level
-	let pullerSpeed = 50; // Default puller speed level
+	let volume = 50;
+	let pullerSpeed = 50;
+	let showConfirmDelete = false; // Control visibility of delete confirmation
 
 	// Load the selected profile's data on mount
 	onMount(() => {
@@ -26,8 +27,8 @@
 					heightFeet = profile.height.feet;
 					heightInches = profile.height.inches;
 					unit = profile.unit;
-					volume = profile.volume || 50; // Use saved value or default to 50
-					pullerSpeed = profile.pullerSpeed || 50; // Use saved value or default to 50
+					volume = profile.volume || 50;
+					pullerSpeed = profile.pullerSpeed || 50;
 				}
 			}
 		});
@@ -38,9 +39,7 @@
 			nameError = 'Name is required';
 			return;
 		}
-
 		nameError = '';
-
 		profiles.update((profileList) => {
 			const updatedList = [...profileList];
 			updatedList[$selectedProfileIndex] = {
@@ -54,20 +53,24 @@
 			};
 			return updatedList;
 		});
-		window.history.back(); // Navigate back to the previous page after updating
+		window.history.back();
 	}
 
 	function goBack() {
-		window.history.back(); // Navigate to the previous page without saving
+		window.history.back();
 	}
 
-  function deleteProfile() {
-    profiles.update(currentProfiles => {
-      currentProfiles.splice($selectedProfileIndex, 1);
-      return currentProfiles;
-    });
-    goto('/');
-  }
+	function confirmDelete() {
+		showConfirmDelete = true;
+	}
+
+	function deleteProfile() {
+		profiles.update(currentProfiles => {
+			currentProfiles.splice($selectedProfileIndex, 1);
+			return currentProfiles;
+		});
+		goto('/');
+	}
 </script>
 
 <style>
@@ -204,6 +207,61 @@
     background-color: #b81d1d;
   }
 
+  .modal {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.5);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.modal-content {
+		background: white;
+		padding: 20px;
+		border-radius: 8px;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+		max-width: 300px;
+		text-align: center;
+	}
+
+	.modal-buttons {
+		display: flex;
+		justify-content: space-between;
+		margin-top: 15px;
+	}
+
+	.confirm-button {
+		background-color: red;
+		color: white;
+		border: none;
+		padding: 10px;
+		border-radius: 5px;
+		cursor: pointer;
+		transition: background-color 0.3s ease;
+	}
+
+	.confirm-button:hover {
+		background-color: #b81d1d;
+	}
+
+	.cancel-button {
+		background-color: #ccc;
+		color: #333;
+		border: none;
+		padding: 10px;
+		border-radius: 5px;
+		cursor: pointer;
+		transition: background-color 0.3s ease;
+	}
+
+	.cancel-button:hover {
+		background-color: #aaa;
+	}
+
 </style>
 
 <Header />
@@ -255,5 +313,17 @@
 	</div>
 
 	<button class="button" on:click={updateProfile}>Update Profile</button>
-  <button class="button delete-button" on:click={deleteProfile}>Delete Profile</button>
+  <button class="button delete-button" on:click={confirmDelete}>Delete Profile</button>
 </div>
+
+{#if showConfirmDelete}
+	<div class="modal">
+		<div class="modal-content">
+			<p>Are you sure you want to delete this profile?</p>
+			<div class="modal-buttons">
+				<button class="confirm-button" on:click={deleteProfile}>Yes, Delete</button>
+				<button class="cancel-button" on:click={() => showConfirmDelete = false}>Cancel</button>
+			</div>
+		</div>
+	</div>
+{/if}
