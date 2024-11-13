@@ -193,14 +193,22 @@
     font-size: 0.9rem;
     margin-top: -10px;
     margin-bottom: 15px;
-}
+  }
+
+  .delete-button {
+    background-color: red;
+    margin-top: 10px;
+  }
+
+  .delete-button:hover {
+    background-color: #b81d1d;
+  }
 
 </style>
 
 <Header />
 
 <div class="form-container">
-    <button class="button" on:click={deleteProfile} style="background-color: red;">Delete Profile</button>
 	<h2>Update Stringer Profile</h2>
 
 	<!-- Back Button -->
@@ -247,4 +255,5 @@
 	</div>
 
 	<button class="button" on:click={updateProfile}>Update Profile</button>
+  <button class="button delete-button" on:click={deleteProfile}>Delete Profile</button>
 </div>
