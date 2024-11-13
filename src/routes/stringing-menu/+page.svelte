@@ -13,6 +13,30 @@
 	// State to track which of the first three buttons is selected
 	let selectedFunctionButton = null; // Values can be 'Level', 'Mains', or 'Crosses'
 
+	let tensionPercentage = 10; // Default percentage for tension adjustment
+
+	function increasePercentage() {
+		tensionPercentage += 1;
+	}
+
+	function decreasePercentage() {
+		if (tensionPercentage > 0) {
+			tensionPercentage -= 1;
+		}
+	}
+
+	function toggleCustomPercentage() {
+		if (isTenPercentEnabled) {
+			// Reset to original tension
+			tension = originalTension;
+		} else {
+			// Increase tension by custom percentage
+			originalTension = tension; // Store the current tension
+			tension = parseFloat((tension * (1 + tensionPercentage / 100)).toFixed(1));
+		}
+		isTenPercentEnabled = !isTenPercentEnabled; // Toggle the button state
+	}
+
 	onMount(() => {
 		selectedProfile.subscribe((profile) => {
 			profileData = profile;
@@ -67,7 +91,7 @@
 
 <div class="main-menu">
 	<div class="welcome">
-		<h1>Welcome {profileData ? profileData.name : ''}</h1>
+		<h1>Welcome, {profileData ? profileData.name : ''}!</h1>
 	</div>
 	<br />
 
@@ -97,21 +121,34 @@
 	</div>
 
 	<!-- Side-by-side function buttons with a vertical bar separating +10% button -->
+	<!-- Function Buttons -->
 	<div class="function-buttons">
 		<button
 			class={selectedFunctionButton === 'Level' ? 'enabled' : ''}
 			on:click={() => selectFunctionButton('Level')}>Level</button
 		>
+
 		<button
 			class={selectedFunctionButton === 'Mains' ? 'enabled' : ''}
 			on:click={() => selectFunctionButton('Mains')}>Mains</button
 		>
+
 		<button
 			class={selectedFunctionButton === 'Crosses' ? 'enabled' : ''}
 			on:click={() => selectFunctionButton('Crosses')}>Crosses</button
 		>
+
 		<div class="vertical-bar"></div>
-		<button class={isTenPercentEnabled ? 'enabled' : ''} on:click={toggleTenPercent}>+10%</button>
+
+		<button class={isTenPercentEnabled ? 'enabled' : ''} on:click={toggleCustomPercentage}>
+			+{tensionPercentage}%
+		</button>
+	</div>
+
+	<!-- New Percentage Adjustment Buttons -->
+	<div class="percentage-controls">
+		<button class="small-button" on:click={increasePercentage}>+</button>
+		<button class="small-button" on:click={decreasePercentage}>-</button>
 	</div>
 </div>
 
@@ -135,7 +172,7 @@
 	}
 
 	.welcome {
-		font-size: 2rem;
+		font-size: 1rem;
 		font-weight: bold;
 		color: #333;
 		margin-bottom: 2rem;
@@ -212,6 +249,9 @@
 		border-radius: 10px;
 		cursor: pointer;
 		transition: background-color 0.3s ease;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
 	.function-buttons button:hover {
@@ -228,5 +268,36 @@
 		background-color: #ccc;
 		height: 100%;
 		margin: 0 0.5rem;
+	}
+
+	.percentage-controls {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		margin-top: 1rem;
+	}
+
+	.small-button {
+		width: 50px;
+		height: 30px;
+		font-size: 1.2rem;
+		background-color: #e0e0e0;
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+		transition: background-color 0.3s ease;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.small-button:hover {
+		background-color: #d0d0d0;
+	}
+
+	.small-button:active {
+		background-color: #c0c0c0;
 	}
 </style>
