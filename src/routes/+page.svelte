@@ -2,6 +2,7 @@
 	import { profiles, selectedProfileIndex, selectedProfile } from '../lib/stores';
 	import { goto } from '$app/navigation';
 	import Header from '$lib/Header.svelte';
+	import { stopPropagation } from 'svelte/legacy';
 
 	let profileList = [];
 
@@ -23,6 +24,13 @@
 		selectedProfileIndex.set(index);
 		goto('/update-stringer');
 	}
+
+	function deleteProfile(index) {
+    	profiles.update(currentProfiles => {
+      		currentProfiles.splice(index, 1);//how do we know which element we are hovering over, how do we not open the stringing profile
+      		return currentProfiles;
+    	});
+  	}
 </script>
 
 <Header />
@@ -37,7 +45,7 @@
     {#if $profiles.length === 0}
       <p>No profiles found. Click "New Stringer" to create a new profile.</p>
     {/if}
-		{#each $profiles as profile, index}
+		{#each $profiles as profile, index}<!--possibly include an index variable?-->
 			<div class="profile-card" on:click={selectStringer(profile)}>
 				<div class="profile-name">{profile.name}</div>
 				<div class="profile-details">
@@ -49,6 +57,13 @@
 				<div class="edit-icon" on:click={(event) => { event.stopPropagation(); editStringer(index); }}>
 					<svg width="25" height="25" fill="currentColor" viewBox="0 0 24 24">
 						<path d="M14.06 9.02l.92.92-8.14 8.14-1.36-.06.06-1.36 8.14-8.14zm3.31-5.57c.39-.39 1.02-.39 1.41 0l2.22 2.22c.39.39.39 1.02 0 1.41l-2.12 2.12-3.64-3.64 2.13-2.11zm-2.68 2.68l3.64 3.64-9.91 9.91h-3.64v-3.64l9.91-9.91z"/>
+					</svg>
+				</div>
+				<!-- Trash icon to delete profile-->
+				<div class="delete-icon" on:click={(event) => {event.stopPropagation(); deleteProfile(index); }}>
+					<svg width="25" height="25" fill="currentColor" viewBox="0 0 24 24" stroke-width="3">
+						<circle cx="12" cy="12" r="10" stroke="currentColor" fill="none"/>
+						<path d="M8 8l8 8M8 16l8-8" stroke="currentColor"/>
 					</svg>
 				</div>
 			</div>
@@ -128,6 +143,20 @@
 
 	.edit-icon:hover {
 		color: #ff5722;
+		transform: scale(1.2);
+	}
+
+	.delete-icon {
+		position: absolute;
+		top: 35px;
+		right: 10px;
+		cursor: pointer;
+		color: red;
+		transition: color 0.2s ease, transform 0.2s ease;
+	}
+
+	.delete-icon:hover {
+		color: maroon;
 		transform: scale(1.2);
 	}
 </style>
