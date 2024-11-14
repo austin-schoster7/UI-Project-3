@@ -16,12 +16,12 @@
 	let tensionPercentage = 10; // Default percentage for tension adjustment
 
 	function increasePercentage() {
-		tensionPercentage += 1;
+		tensionPercentage += 5;
 	}
 
 	function decreasePercentage() {
 		if (tensionPercentage > 0) {
-			tensionPercentage -= 1;
+			tensionPercentage -= 5;
 		}
 	}
 
@@ -140,15 +140,18 @@
 
 		<div class="vertical-bar"></div>
 
-		<button class={isTenPercentEnabled ? 'enabled' : ''} on:click={toggleCustomPercentage}>
-			+{tensionPercentage}%
-		</button>
-	</div>
+		<!-- Container for the percentage button and plus/minus controls -->
+		<div class="percentage-control-group">
+			<button class={isTenPercentEnabled ? 'enabled' : ''} on:click={toggleCustomPercentage}>
+				+{tensionPercentage}%
+			</button>
 
-	<!-- New Percentage Adjustment Buttons -->
-	<div class="percentage-controls">
-		<button class="small-button" on:click={increasePercentage}>+</button>
-		<button class="small-button" on:click={decreasePercentage}>-</button>
+			<!-- Plus and minus buttons next to the percentage button -->
+			<div class="percentage-controls">
+				<button class="small-button" on:click={increasePercentage}>+</button>
+				<button class="small-button" on:click={decreasePercentage}>-</button>
+			</div>
+		</div>
 	</div>
 </div>
 
@@ -200,6 +203,10 @@
 		cursor: pointer;
 	}
 
+	.arrow-button:hover {
+		color: #357abd;
+	}
+
 	.decimal-point {
 		font-size: 12rem;
 		font-weight: bold;
@@ -216,10 +223,6 @@
 	}
 
 	.unit-label:hover {
-		color: #357abd;
-	}
-
-	.arrow-button:hover {
 		color: #357abd;
 	}
 
@@ -252,6 +255,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		height: 100%;
 	}
 
 	.function-buttons button:hover {
@@ -270,19 +274,45 @@
 		margin: 0 0.5rem;
 	}
 
+	.percentage-control-group {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem; /* Adjust gap between percentage button and controls as needed */
+		height: 100%;
+		width: 25%;
+	}
+
+	.percentage-control-group button {
+		padding: 1rem;
+		font-size: 1rem;
+		background-color: #e0e0e0;
+		border: none;
+		border-radius: 10px;
+		cursor: pointer;
+		transition: background-color 0.3s ease;
+		height: 100%;
+	}
+
+	.percentage-control-group button:hover {
+		background-color: #d0d0d0;
+	}
+
+	.percentage-control-group button.enabled {
+		background-color: #357abd;
+		color: white;
+	}
+
 	.percentage-controls {
 		display: flex;
 		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		gap: 0.5rem;
-		margin-top: 1rem;
+		gap: 0.3rem;
 	}
 
 	.small-button {
-		width: 50px;
+		width: 40px;
 		height: 30px;
-		font-size: 1.2rem;
+		font-size: 1rem;
 		background-color: #e0e0e0;
 		border: none;
 		border-radius: 5px;
@@ -300,4 +330,5 @@
 	.small-button:active {
 		background-color: #c0c0c0;
 	}
+
 </style>
