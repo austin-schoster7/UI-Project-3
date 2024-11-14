@@ -148,8 +148,24 @@
 
 			<!-- Plus and minus buttons next to the percentage button -->
 			<div class="percentage-controls">
-				<button class="small-button" on:click={increasePercentage}>+</button>
-				<button class="small-button" on:click={decreasePercentage}>-</button>
+				<button
+					class="small-button"
+					on:click={increasePercentage}
+					disabled={isTenPercentEnabled}
+					title={isTenPercentEnabled ? 'Disable the toggle to change value' : ''}
+					aria-disabled={isTenPercentEnabled}
+				>
+					+
+				</button>
+				<button
+					class="small-button"
+					on:click={decreasePercentage}
+					disabled={isTenPercentEnabled}
+					title={isTenPercentEnabled ? 'Disable the toggle to change value' : ''}
+					aria-disabled={isTenPercentEnabled}
+				>
+					-
+				</button>
 			</div>
 		</div>
 	</div>
@@ -331,4 +347,9 @@
 		background-color: #c0c0c0;
 	}
 
+	.small-button:disabled {
+		background-color: #f8d7da; /* Light red background for disabled state */
+		color: #721c24; /* Dark red text color */
+		cursor: not-allowed; /* Change cursor to indicate non-clickable state */
+	}
 </style>
