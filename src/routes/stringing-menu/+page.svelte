@@ -16,7 +16,8 @@
 
 	let tensionPercentage = 10; // Default percentage for tension adjustment
 
-	function setDisplayTension() { // Sets the displayed tension to the actual value shown on screen
+	function setDisplayTension() {
+		// Sets the displayed tension to the actual value shown on screen
 		displayTension = tension / 10;
 	}
 
@@ -55,12 +56,20 @@
 	});
 
 	function incrementTension(step) {
-		tension += step;
+		if (tension + step <= 900) {
+			tension += step;
+		} else {
+			tension = 900; // Cap at 90.0 lbs
+		}
 		setDisplayTension();
 	}
 
 	function decrementTension(step) {
-		tension -= step;
+		if (tension - step >= 200) {
+			tension -= step;
+		} else {
+			tension = 200; // Floor at 20.0 lbs
+		}
 		setDisplayTension();
 	}
 
@@ -134,7 +143,6 @@
 		<button class="unit-label" on:click={toggleUnit}>{unit}</button>
 	</div>
 
-	<!-- Side-by-side function buttons with a vertical bar separating +10% button -->
 	<!-- Function Buttons -->
 	<div class="function-buttons">
 		<button
@@ -144,13 +152,27 @@
 
 		<button
 			class={selectedFunctionButton === 'Mains' ? 'enabled' : ''}
-			on:click={() => selectFunctionButton('Mains')}>Mains</button
+			title="Mains"
+			on:click={() => selectFunctionButton('Mains')}
 		>
+			<div class="mains-icon">
+				{#each Array(6) as _, i}
+					<div class="vertical-line"></div>
+				{/each}
+			</div>
+		</button>
 
 		<button
 			class={selectedFunctionButton === 'Crosses' ? 'enabled' : ''}
-			on:click={() => selectFunctionButton('Crosses')}>Crosses</button
+			title="Crosses"
+			on:click={() => selectFunctionButton('Crosses')}
 		>
+			<div class="crosses-icon">
+				{#each Array(6) as _, i}
+					<div class="horizontal-line"></div>
+				{/each}
+			</div>
+		</button>
 
 		<div class="vertical-bar"></div>
 
@@ -295,6 +317,44 @@
 	.function-buttons button.enabled {
 		background-color: #357abd;
 		color: white;
+	}
+
+	.mains-icon {
+		display: flex;
+		gap: 4px; /* Space between lines */
+		margin-bottom: 8px; /* Spacing between lines and text */
+	}
+
+	.vertical-line {
+		width: 3px;
+		height: 35px;
+		background-color: #333; /* Default color */
+		transition: background-color 0.3s ease;
+	}
+
+	/* Change the color of lines when the button is enabled */
+	button.enabled .mains-icon .vertical-line {
+		background-color: white !important;
+	}
+
+	.crosses-icon {
+		display: flex;
+		flex-direction: column;
+		gap: 4px; /* Space between lines */
+		margin-bottom: 8px; /* Spacing between lines and text */
+		align-items: center; /* Center lines horizontally */
+	}
+
+	.horizontal-line {
+		width: 35px; /* Length of each line */
+		height: 3px; /* Thickness of each line */
+		background-color: #333; /* Default color */
+		transition: background-color 0.3s ease;
+	}
+
+	/* Change the color of lines when the button is enabled */
+	button.enabled .crosses-icon .horizontal-line {
+		background-color: white !important;
 	}
 
 	.vertical-bar {
