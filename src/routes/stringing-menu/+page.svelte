@@ -6,7 +6,8 @@
 
 	let profileData;
 	let unit = 'lbs'; // Track the current unit
-	let tension = 55.0; // Default tension value
+	let tension = 550; // Default tension value
+	let displayTension = 55;
 	let originalTension = tension; // Store original tension for toggling +10%
 	let isTenPercentEnabled = false; // State for +10% button
 
@@ -14,6 +15,10 @@
 	let selectedFunctionButton = null; // Values can be 'Level', 'Mains', or 'Crosses'
 
 	let tensionPercentage = 10; // Default percentage for tension adjustment
+
+	function setDisplayTension() { // Sets the displayed tension to the actual value shown on screen
+		displayTension = tension / 10;
+	}
 
 	function increasePercentage() {
 		tensionPercentage += 5;
@@ -29,10 +34,12 @@
 		if (isTenPercentEnabled) {
 			// Reset to original tension
 			tension = originalTension;
+			setDisplayTension();
 		} else {
 			// Increase tension by custom percentage
 			originalTension = tension; // Store the current tension
 			tension = parseFloat((tension * (1 + tensionPercentage / 100)).toFixed(1));
+			setDisplayTension();
 		}
 		isTenPercentEnabled = !isTenPercentEnabled; // Toggle the button state
 	}
@@ -41,27 +48,32 @@
 		selectedProfile.subscribe((profile) => {
 			profileData = profile;
 			unit = profile.unit ? profile.unit : 'lbs'; // Set unit based on profile data
-			tension = unit === 'lbs' ? 55.0 : 25.0; // Set default tension based on unit
+			tension = unit === 'lbs' ? 550 : 250; // Set default tension based on unit
 			originalTension = tension; // Set original tension based on unit
+			setDisplayTension();
 		});
 	});
 
 	function incrementTension(step) {
 		tension += step;
+		setDisplayTension();
 	}
 
 	function decrementTension(step) {
 		tension -= step;
+		setDisplayTension();
 	}
 
 	function toggleUnit() {
 		if (unit === 'lbs') {
 			// Convert lbs to kg (1 lb = 0.453592 kg)
-			tension = parseFloat((tension * 0.453592).toFixed(1));
+			tension = parseFloat((tension * 0.453592).toFixed(0));
+			setDisplayTension();
 			unit = 'kg';
 		} else {
 			// Convert kg to lbs (1 kg = 2.20462 lbs)
-			tension = parseFloat((tension * 2.20462).toFixed(1));
+			tension = parseFloat((tension * 2.20462).toFixed(0));
+			setDisplayTension();
 			unit = 'lbs';
 		}
 	}
@@ -70,10 +82,12 @@
 		if (isTenPercentEnabled) {
 			// Reset to original tension
 			tension = originalTension;
+			setDisplayTension();
 		} else {
 			// Increase tension by 10%
 			originalTension = tension; // Store the current tension
-			tension = parseFloat((tension * 1.1).toFixed(1)); // Increase by 10%
+			tension = parseFloat((tension * 1.1).toFixed(0)); // Increase by 10%
+			setDisplayTension();
 		}
 		isTenPercentEnabled = !isTenPercentEnabled; // Toggle the button state
 	}
@@ -98,22 +112,22 @@
 	<!-- Increment and Decrement Arrows for each place value -->
 	<div class="tension-controls">
 		<div class="tension-column">
-			<button class="arrow-button" on:click={() => incrementTension(10)}>▲</button>
-			<div class="tension-place">{Math.floor(tension / 10)}</div>
-			<button class="arrow-button" on:click={() => decrementTension(10)}>▼</button>
+			<button class="arrow-button" on:click={() => incrementTension(100)}>▲</button>
+			<div class="tension-place">{Math.floor(displayTension / 10)}</div>
+			<button class="arrow-button" on:click={() => decrementTension(100)}>▼</button>
 		</div>
 		<div class="tension-column">
-			<button class="arrow-button" on:click={() => incrementTension(1)}>▲</button>
-			<div class="tension-place">{Math.floor(tension % 10)}</div>
-			<button class="arrow-button" on:click={() => decrementTension(1)}>▼</button>
+			<button class="arrow-button" on:click={() => incrementTension(10)}>▲</button>
+			<div class="tension-place">{Math.floor(displayTension % 10)}</div>
+			<button class="arrow-button" on:click={() => decrementTension(10)}>▼</button>
 		</div>
 
 		<div class="decimal-point">.</div>
 
 		<div class="tension-column">
-			<button class="arrow-button" on:click={() => incrementTension(0.1)}>▲</button>
-			<div class="tension-place">{(tension % 1).toFixed(1).split('.')[1]}</div>
-			<button class="arrow-button" on:click={() => decrementTension(0.1)}>▼</button>
+			<button class="arrow-button" on:click={() => incrementTension(1)}>▲</button>
+			<div class="tension-place">{(displayTension % 1).toFixed(1).split('.')[1]}</div>
+			<button class="arrow-button" on:click={() => decrementTension(1)}>▼</button>
 		</div>
 
 		<!-- Unit Toggle Button -->
