@@ -102,14 +102,6 @@
 		isTenPercentEnabled = !isTenPercentEnabled; // Toggle the button state
 	}
 
-	function selectFunctionButton(button) {
-		if (selectedFunctionButton === button) {
-			selectedFunctionButton = null; // Deselect if the same button is clicked
-		} else {
-			selectedFunctionButton = button; // Select the new button
-		}
-	}
-
 	function simulateAdjustment(button) {
 		selectedFunctionButton = button;
 		isLoading = true;
@@ -196,7 +188,7 @@
 		<!-- Container for the percentage button and plus/minus controls -->
 		<div class="percentage-control-group">
 			<button class={isTenPercentEnabled ? 'enabled' : ''} on:click={toggleCustomPercentage}>
-				+{tensionPercentage}%
+				Knot Tension: +{tensionPercentage}%
 			</button>
 
 			<!-- Plus and minus buttons next to the percentage button -->
@@ -360,10 +352,18 @@
 		justify-content: center;
 	}
 
-	.mains-label, .crosses-label {
+	.mains-label,
+	.crosses-label {
 		font-size: 0.9rem;
-		color: #333;
+		color: #333; /* Default color */
 		margin-top: 0.5rem;
+		transition: color 0.3s ease;
+	}
+
+	/* Change label to white when button is selected */
+	button.enabled .mains-label,
+	button.enabled .crosses-label {
+		color: white; /* Change to white when enabled */
 	}
 
 	/* Vertical Line in Mains Icon */
@@ -372,6 +372,10 @@
 		height: 35px;
 		background-color: #333;
 		transition: background-color 0.3s ease;
+	}
+
+	button.enabled .mains-icon .vertical-line {
+		background-color: white; /* Change to white when enabled */
 	}
 
 	button:disabled .mains-icon .vertical-line {
@@ -394,10 +398,13 @@
 		transition: background-color 0.3s ease;
 	}
 
+	button.enabled .crosses-icon .horizontal-line {
+		background-color: white; /* Change to white when enabled */
+	}
+
 	button:disabled .crosses-icon .horizontal-line {
 		background-color: #a0a0a0; /* Dimmed gray for disabled state */
 	}
-
 
 	.vertical-bar {
 		width: 4px;
@@ -410,7 +417,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		gap: 0.5rem; 
+		gap: 0.5rem;
 		height: 100%;
 		width: 25%;
 	}
@@ -464,9 +471,9 @@
 	}
 
 	.small-button:disabled {
-		background-color: #f8d7da; 
-		color: #721c24; 
-		cursor: not-allowed; 
+		background-color: #f8d7da;
+		color: #721c24;
+		cursor: not-allowed;
 	}
 
 	/* Progress Bar Container */
