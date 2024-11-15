@@ -46,14 +46,16 @@
 <div class="header">
 	<span class="header-title">Stringing Machine</span>
 	<div class="button-group">
+		{#if $page.url.pathname === '/'}
 		<button on:click={triggerFileInput} id = "profileButton">Upload Profiles</button>
+		{/if}
+		{#if $page.url.pathname === '/stringing-menu'}
 		<button on:click={goHome}>
-			<!-- <img src="/profile.png" alt="View Profiles" class="settings-icon" /> -->
 			View Profiles
 		</button>
+		{/if}
 		{#if $page.url.pathname === '/stringing-menu'}
 			<button on:click={openSettings} class="settings-button">
-				<!-- <img src="/settings.jpg" alt="Settings" class="settings-icon" /> -->
 				Profile Settings
 			</button>
 		{/if}
