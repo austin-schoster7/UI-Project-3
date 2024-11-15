@@ -10,6 +10,7 @@
 	let displayTension = 55;
 	let originalTension = tension; // Store original tension for toggling +10%
 	let isTenPercentEnabled = false; // State for +10% button
+	let isLoading = false; // State to track loading state
 
 	// State to track which of the first three buttons is selected
 	let selectedFunctionButton = null; // Values can be 'Level', 'Mains', or 'Crosses'
@@ -108,6 +109,17 @@
 			selectedFunctionButton = button; // Select the new button
 		}
 	}
+
+	function simulateAdjustment(button) {
+		selectedFunctionButton = button;
+		isLoading = true;
+
+		// Start a 3-second timer for the progress bar
+		setTimeout(() => {
+			isLoading = false;
+			// Keep `selectedFunctionButton` set to the last clicked button
+		}, 3000);
+	}
 </script>
 
 <Header />
@@ -147,31 +159,36 @@
 	<div class="function-buttons">
 		<button
 			class={selectedFunctionButton === 'Level' ? 'enabled' : ''}
-			on:click={() => selectFunctionButton('Level')}>Level</button
+			on:click={() => simulateAdjustment('Level')}
+			disabled={isLoading}
 		>
+			Level
+		</button>
 
 		<button
 			class={selectedFunctionButton === 'Mains' ? 'enabled' : ''}
-			title="Mains"
-			on:click={() => selectFunctionButton('Mains')}
+			on:click={() => simulateAdjustment('Mains')}
+			disabled={isLoading}
 		>
-			<div class="mains-icon">
+			<div class="mains-icon" disabled={isLoading}>
 				{#each Array(6) as _, i}
 					<div class="vertical-line"></div>
 				{/each}
 			</div>
+			<span class="mains-label" disabled={isLoading}>Mains</span>
 		</button>
 
 		<button
 			class={selectedFunctionButton === 'Crosses' ? 'enabled' : ''}
-			title="Crosses"
-			on:click={() => selectFunctionButton('Crosses')}
+			on:click={() => simulateAdjustment('Crosses')}
+			disabled={isLoading}
 		>
-			<div class="crosses-icon">
+			<div class="crosses-icon" disabled={isLoading}>
 				{#each Array(6) as _, i}
 					<div class="horizontal-line"></div>
 				{/each}
 			</div>
+			<span class="mains-label" disabled={isLoading}>Crosses</span>
 		</button>
 
 		<div class="vertical-bar"></div>
@@ -205,6 +222,13 @@
 			</div>
 		</div>
 	</div>
+	<!-- Show Progress Bar when loading -->
+	{#if isLoading}
+		<div class="progress-bar">
+			<div class="progress"></div>
+		</div>
+		<div class="adjusting-text">Adjusting Machine...</div>
+	{/if}
 </div>
 
 <style>
@@ -308,6 +332,8 @@
 		align-items: center;
 		justify-content: center;
 		height: 100%;
+		flex-direction: column;
+		color: #333;
 	}
 
 	.function-buttons button:hover {
@@ -319,43 +345,59 @@
 		color: white;
 	}
 
-	.mains-icon {
-		display: flex;
-		gap: 4px; /* Space between lines */
-		margin-bottom: 8px; /* Spacing between lines and text */
+	.function-buttons button:disabled {
+		background-color: #d0d0d0; /* Ensure all disabled buttons have a consistent gray */
+		color: #a0a0a0; /* Dim the text for disabled state */
+		cursor: not-allowed;
 	}
 
+	/* Styles for Mains Icon */
+	.mains-icon {
+		display: flex;
+		flex-direction: row;
+		gap: 4px;
+		margin-bottom: 0.5rem;
+		justify-content: center;
+	}
+
+	.mains-label, .crosses-label {
+		font-size: 0.9rem;
+		color: #333;
+		margin-top: 0.5rem;
+	}
+
+	/* Vertical Line in Mains Icon */
 	.vertical-line {
 		width: 3px;
 		height: 35px;
-		background-color: #333; /* Default color */
+		background-color: #333;
 		transition: background-color 0.3s ease;
 	}
 
-	/* Change the color of lines when the button is enabled */
-	button.enabled .mains-icon .vertical-line {
-		background-color: white !important;
+	button:disabled .mains-icon .vertical-line {
+		background-color: #a0a0a0; /* Dimmed gray for disabled state */
 	}
 
+	/* Crosses Icon */
 	.crosses-icon {
 		display: flex;
 		flex-direction: column;
-		gap: 4px; /* Space between lines */
-		margin-bottom: 8px; /* Spacing between lines and text */
-		align-items: center; /* Center lines horizontally */
+		gap: 4px;
+		margin-bottom: 8px;
+		align-items: center;
 	}
 
 	.horizontal-line {
-		width: 35px; /* Length of each line */
-		height: 3px; /* Thickness of each line */
-		background-color: #333; /* Default color */
+		width: 35px;
+		height: 3px;
+		background-color: #333;
 		transition: background-color 0.3s ease;
 	}
 
-	/* Change the color of lines when the button is enabled */
-	button.enabled .crosses-icon .horizontal-line {
-		background-color: white !important;
+	button:disabled .crosses-icon .horizontal-line {
+		background-color: #a0a0a0; /* Dimmed gray for disabled state */
 	}
+
 
 	.vertical-bar {
 		width: 4px;
@@ -368,7 +410,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		gap: 0.5rem; /* Adjust gap between percentage button and controls as needed */
+		gap: 0.5rem; 
 		height: 100%;
 		width: 25%;
 	}
@@ -422,8 +464,44 @@
 	}
 
 	.small-button:disabled {
-		background-color: #f8d7da; /* Light red background for disabled state */
-		color: #721c24; /* Dark red text color */
-		cursor: not-allowed; /* Change cursor to indicate non-clickable state */
+		background-color: #f8d7da; 
+		color: #721c24; 
+		cursor: not-allowed; 
+	}
+
+	/* Progress Bar Container */
+	.progress-bar {
+		width: 100%;
+		max-width: 800px;
+		height: 1rem;
+		background-color: #ccc;
+		border-radius: 5px;
+		overflow: hidden;
+		margin-top: 1rem;
+	}
+
+	/* Progress Animation */
+	.progress {
+		height: 100%;
+		width: 100%;
+		background-color: #4a90e2;
+		animation: progressAnimation 3s linear forwards;
+	}
+
+	.adjusting-text {
+		margin-top: 0.5rem;
+		font-size: 1rem;
+		color: #4a90e2;
+		text-align: center;
+		font-weight: bold;
+	}
+
+	@keyframes progressAnimation {
+		from {
+			width: 0;
+		}
+		to {
+			width: 100%;
+		}
 	}
 </style>
