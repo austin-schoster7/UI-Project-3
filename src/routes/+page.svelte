@@ -9,8 +9,9 @@
 
 	$: profiles.subscribe((value) => (profileList = value));
 
-	function selectStringer(profile) {
+	function selectStringer(profile, index) {
 		selectedProfile.set(profile);
+		selectedProfileIndex.set(index);
 		goto('/stringing-menu');
 	}
 
@@ -58,7 +59,7 @@
 			<p>No profiles found. Click "New Stringer" to create a new profile.</p>
 		{/if}
 		{#each $profiles as profile, index}
-			<div class="profile-card" on:click={() => selectStringer(profile)}>
+			<div class="profile-card" on:click={() => selectStringer(profile, index)}>
 				<div class="profile-name">{profile.name}</div>
 				<div class="profile-details">
 					Experience: {profile.experienceLevel}<br />
