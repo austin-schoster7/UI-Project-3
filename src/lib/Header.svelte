@@ -44,7 +44,7 @@
 </script>
 
 <div class="header">
-	<span class="header-title">Stringing Machine</span>
+	<button class="header-title" on:click={goHome}>Stringing Machine</button>
 	<div class="button-group">
 		{#if $page.url.pathname === '/'}
 		<button on:click={triggerFileInput} id = "profileButton">Upload Profiles</button>
@@ -77,6 +77,13 @@
 	.header-title {
 		font-size: 1.5rem;
 		font-weight: 500;
+		font-family: inherit;
+		color: #fff;
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 0;
+		text-align: left;
 	}
 
 	.button-group {
@@ -112,7 +119,7 @@
 
 	/* Larger settings icon without any padding or white background */
 	.settings-icon {
-		width: 30px; /* Adjust size as needed */
+		width: 30px;
 		height: 30px;
 	}
 </style>
