@@ -11,10 +11,14 @@
 	let originalTension = tension; // Store original tension for toggling +10%
 	let isTenPercentEnabled = false; // State for +10% button
 	let isLoading = false; // State to track loading state
+	let crossTension = 0;
+	let mainTension = 0;
+	let tensionUnitM;
+	let tensionUnitC;
 
 	// State to track which of the first three buttons is selected
 	let selectedFunctionButton = null; // Values can be 'Level', 'Mains', or 'Crosses'
-
+	let buttonNum = -1;
 	let tensionPercentage = 10; // Default percentage for tension adjustment
 
 	function setDisplayTension() {
@@ -102,15 +106,37 @@
 		isTenPercentEnabled = !isTenPercentEnabled; // Toggle the button state
 	}
 
-	function simulateAdjustment(button) {
+	function simulateAdjustment(button, num) {
 		selectedFunctionButton = button;
 		isLoading = true;
+		buttonNum = num;
+
+		if(num ==0){
+			mainTension = 0;
+			crossTension = 0;
+		}
 
 		// Start a 3-second timer for the progress bar
 		setTimeout(() => {
 			isLoading = false;
 			// Keep `selectedFunctionButton` set to the last clicked button
 		}, 3000);
+	}
+
+	function SetTension(){
+		switch(buttonNum){
+			case 1:
+				mainTension = tension/10;
+				tensionUnitM = unit;
+				break;
+			case 2:
+				crossTension = tension/10;
+				tensionUnitC = unit;
+				break;
+			default:
+				console.log("no function selected yet");
+				break;
+		}
 	}
 </script>
 
@@ -147,11 +173,13 @@
 		<button class="unit-label" on:click={toggleUnit}>{unit}</button>
 	</div>
 
+	<button id = "setButton" on:click={SetTension} style = "width: 355px; margin-right:65px;">Set Tension</button>
+
 	<!-- Function Buttons -->
 	<div class="function-buttons">
 		<button
 			class={selectedFunctionButton === 'Level' ? 'enabled' : ''}
-			on:click={() => simulateAdjustment('Level')}
+			on:click={() => simulateAdjustment('Level',0)}
 			disabled={isLoading}
 		>
 			Level
@@ -159,7 +187,7 @@
 
 		<button
 			class={selectedFunctionButton === 'Mains' ? 'enabled' : ''}
-			on:click={() => simulateAdjustment('Mains')}
+			on:click={() => simulateAdjustment('Mains',1)}
 			disabled={isLoading}
 		>
 			<div class="mains-icon" disabled={isLoading}>
@@ -167,12 +195,12 @@
 					<div class="vertical-line"></div>
 				{/each}
 			</div>
-			<span class="mains-label" disabled={isLoading}>Mains</span>
+			<span class="mains-label" disabled={isLoading}>Mains {mainTension === 0 ? '' : (': '+ mainTension + tensionUnitM )}</span>
 		</button>
 
 		<button
 			class={selectedFunctionButton === 'Crosses' ? 'enabled' : ''}
-			on:click={() => simulateAdjustment('Crosses')}
+			on:click={() => simulateAdjustment('Crosses',2)}
 			disabled={isLoading}
 		>
 			<div class="crosses-icon" disabled={isLoading}>
@@ -180,7 +208,7 @@
 					<div class="horizontal-line"></div>
 				{/each}
 			</div>
-			<span class="mains-label" disabled={isLoading}>Crosses</span>
+			<span class="mains-label" disabled={isLoading}>Crosses {crossTension === 0 ? '' : (': '+ crossTension + tensionUnitC )}</span>
 		</button>
 
 		<div class="vertical-bar"></div>
