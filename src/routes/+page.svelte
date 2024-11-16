@@ -173,7 +173,7 @@
 
 	.delete-icon {
 		position: absolute;
-		top: 35px;
+		top: 40px;
 		right: 10px;
 		cursor: pointer;
 		color: red;
