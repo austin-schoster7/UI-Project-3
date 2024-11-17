@@ -20,6 +20,7 @@
 	let selectedFunctionButton = null; // Values can be 'Level', 'Mains', or 'Crosses'
 	let buttonNum = -1;
 	let tensionPercentage = 10; // Default percentage for tension adjustment
+	let showClearConfirmation = false; // State to toggle the confirmation popup
 
 	function setDisplayTension() {
 		// Sets the displayed tension to the actual value shown on screen
@@ -111,32 +112,56 @@
 		isLoading = true;
 		buttonNum = num;
 
-		if(num ==0){
-			mainTension = 0;
-			crossTension = 0;
-		}
+		// Update the tension value from saved values if switching back to a button
+		updateTensionFromSaved(button);
 
 		// Start a 3-second timer for the progress bar
 		setTimeout(() => {
 			isLoading = false;
-			// Keep `selectedFunctionButton` set to the last clicked button
 		}, 3000);
 	}
 
-	function SetTension(){
-		switch(buttonNum){
-			case 1:
-				mainTension = tension/10;
-				tensionUnitM = unit;
-				break;
-			case 2:
-				crossTension = tension/10;
-				tensionUnitC = unit;
-				break;
-			default:
-				console.log("no function selected yet");
-				break;
+	function SetTension() {
+		if (buttonNum === 1) {
+			mainTension = tension / 10;
+			tensionUnitM = unit;
+		} else if (buttonNum === 2) {
+			crossTension = tension / 10;
+			tensionUnitC = unit;
 		}
+	}
+
+	function updateTensionFromSaved(button) {
+		if (button === 'Mains' && mainTension !== 0) {
+			tension = mainTension * 10;
+			unit = tensionUnitM;
+		} else if (button === 'Crosses' && crossTension !== 0) {
+			tension = crossTension * 10;
+			unit = tensionUnitC;
+		} else {
+			tension = unit === 'lbs' ? 550 : 250; // Reset default tension
+		}
+		setDisplayTension();
+	}
+
+	function ClearTensions() {
+		mainTension = 0;
+		crossTension = 0;
+		tensionUnitM = 'lbs';
+		tensionUnitC = 'lbs';
+
+		// Reset current tension to default
+		tension = unit === 'lbs' ? 550 : 250;
+		setDisplayTension();
+		showClearConfirmation = false; // Hide the confirmation popup after clearing
+	}
+
+	function showConfirmation() {
+		showClearConfirmation = true; // Show the confirmation popup
+	}
+
+	function cancelClear() {
+		showClearConfirmation = false; // Hide the confirmation popup
 	}
 </script>
 
@@ -173,7 +198,30 @@
 		<button class="unit-label" on:click={toggleUnit}>{unit}</button>
 	</div>
 
-	<button id = "setButton" on:click={SetTension} style = "width: 355px; margin-right:65px;">Set Tension</button>
+	<div class="button-group">
+		<button class="setButton" on:click={SetTension}>
+			{#if selectedFunctionButton === 'Mains'}
+				Set Mains Tension
+			{:else if selectedFunctionButton === 'Crosses'}
+				Set Crosses Tension
+			{:else}
+				Set Tension
+			{/if}
+		</button>
+		<button class="clearButton" on:click={showConfirmation}>Clear Tensions</button>
+	</div>
+	
+	{#if showClearConfirmation}
+		<div class="overlay">
+			<div class="confirmation-popup">
+				<p>Are you sure you want to clear the saved tensions?</p>
+				<div class="popup-buttons">
+					<button class="confirmButton" on:click={ClearTensions}>Yes</button>
+					<button class="cancelButton" on:click={cancelClear}>No</button>
+				</div>
+			</div>
+		</div>
+	{/if}
 
 	<!-- Function Buttons -->
 	<div class="function-buttons">
@@ -320,6 +368,109 @@
 
 	.unit-label:hover {
 		color: #357abd;
+	}
+
+	.setButton {
+		background-color: #e0e0e0;
+		color: #333;
+		border: none;
+		border-radius: 10px;
+		padding: 1rem; /* Adjusted for consistency */
+		font-size: 1.2rem; /* Match other buttons */
+		cursor: pointer;
+		transition: background-color 0.3s ease;
+		width: 355px; /* Specific size for this button */
+		margin-right: 65px; /* Keep the specific alignment */
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		max-height: 20px;
+	}
+
+	.setButton:hover {
+		background-color: #d0d0d0;
+	}
+
+	.clearButton {
+		width: 355px; /* Match the width of the Set Tension button */
+		margin-top: 10px;
+		padding: 1rem;
+		font-size: 1rem;
+		background-color: #ff6666; /* Red to indicate clearing action */
+		border: none;
+		border-radius: 10px;
+		cursor: pointer;
+		color: white;
+		transition: background-color 0.3s ease;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		max-height: 20px;
+	}
+
+	.clearButton:hover {
+		background-color: #e60000; /* Darker red on hover */
+	}
+
+	/* Semi-transparent gray overlay */
+	.overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent gray */
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 1000; /* Ensure it appears above other elements */
+	}
+
+	/* Confirmation popup */
+	.confirmation-popup {
+		position: relative;
+		width: 300px;
+		background-color: white;
+		padding: 1.5rem;
+		border-radius: 10px;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+		text-align: center;
+		z-index: 1100; /* Ensure it appears above the overlay */
+	}
+
+	/* Popup buttons */
+	.popup-buttons {
+		display: flex;
+		justify-content: space-around;
+		margin-top: 1rem;
+	}
+
+	.confirmButton {
+		padding: 0.5rem 1rem;
+		background-color: #4caf50; /* Green for confirmation */
+		border: none;
+		border-radius: 5px;
+		color: white;
+		cursor: pointer;
+		transition: background-color 0.3s ease;
+	}
+
+	.confirmButton:hover {
+		background-color: #388e3c; /* Darker green on hover */
+	}
+
+	.cancelButton {
+		padding: 0.5rem 1rem;
+		background-color: #f44336; /* Red for cancellation */
+		border: none;
+		border-radius: 5px;
+		color: white;
+		cursor: pointer;
+		transition: background-color 0.3s ease;
+	}
+
+	.cancelButton:hover {
+		background-color: #d32f2f; /* Darker red on hover */
 	}
 
 	.tension-place {
