@@ -281,7 +281,12 @@
 	{/if}
 
 	<label>Experience Level</label>
-	<input bind:value={experienceLevel} type="text" placeholder="Enter experience level" />
+	<select type="text" placeholder="Enter experience level" bind:value={experienceLevel}>
+		<option value="Beginner">Beginner</option>
+		<option value="Experienced">Experienced</option>
+		<option value="Advanced">Advanced</option>
+		<option value="Professional">Professional</option>
+	</select>
 
 	<label>Email</label>
 	<input bind:value={email} type="email" placeholder="Enter email" />
