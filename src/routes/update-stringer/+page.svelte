@@ -34,6 +34,7 @@
 		});
 	});
 
+  // Update the selected profile with the new data
 	function updateProfile() {
 		if (!name.trim()) {
 			nameError = 'Name is required';
@@ -56,14 +57,17 @@
 		window.history.back();
 	}
 
+  // Navigate back to the previous page
 	function goBack() {
 		window.history.back();
 	}
 
+  // Show the delete confirmation modal
 	function confirmDelete() {
 		showConfirmDelete = true;
 	}
 
+  // Delete the selected profile
 	function deleteProfile() {
 		profiles.update(currentProfiles => {
 			currentProfiles.splice($selectedProfileIndex, 1);
@@ -119,9 +123,9 @@
   }
 
   .slider {
-    width: 80%; /* Make slider larger */
+    width: 80%;
     -webkit-appearance: none;
-    height: 12px; /* Increase slider height */
+    height: 12px; 
     background: #ddd;
     border-radius: 5px;
     outline: none;
@@ -135,9 +139,9 @@
   .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 24px; /* Make thumb larger */
+    width: 24px;
     height: 24px;
-    background: #fff; /* White thumb for contrast */
+    background: #fff; 
     border: 2px solid #4A90E2;
     border-radius: 50%;
     cursor: pointer;
@@ -165,7 +169,7 @@
   }
 
   .slider-input {
-    width: 60px; /* Make input box smaller */
+    width: 60px; 
     text-align: center;
   }
 

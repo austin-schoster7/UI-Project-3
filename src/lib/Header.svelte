@@ -3,44 +3,49 @@
   	import { profiles } from '../lib/stores'
 	import { page } from '$app/stores';
 
+	// Function to navigate to the home page
 	function goHome() {
 		goto('/');
 	}
 
+	// Function to navigate to the settings page
 	function openSettings() {
 		goto('/update-stringer');
 	}
 
 	let imageUploadButton;
+
+	// Function to trigger the file input element
 	const triggerFileInput = () => {
 		imageUploadButton.click();
 	};
 
+	// Function to handle the file change event
   	const handleFileChange = (event) => {
-    const profilecsv = new FileReader();
-    
-    profilecsv.onload = (e) => {
-      const text = e.target.result;
-      const lines = text.split('\r\n');
-      lines.pop();
+		const profilecsv = new FileReader();
+		
+		profilecsv.onload = (e) => {
+		const text = e.target.result;
+		const lines = text.split('\r\n');
+		lines.pop();
 
-      lines.forEach(element => {
-        const profileData = element.split(',');
+		lines.forEach(element => {
+			const profileData = element.split(',');
 
-        let newProfile = {
-          name: profileData[0],
-          experienceLevel: profileData[1],
-          email: profileData[2],
-          height: { feet: profileData[3], inches: profileData[4] },
-          unit: profileData[5]
-        };
+			let newProfile = {
+			name: profileData[0],
+			experienceLevel: profileData[1],
+			email: profileData[2],
+			height: { feet: profileData[3], inches: profileData[4] },
+			unit: profileData[5]
+			};
 
-        profiles.update((profileList) => [...profileList, newProfile]);
-      });
-    };
+			profiles.update((profileList) => [...profileList, newProfile]);
+		});
+		};
 
-    profilecsv.readAsText(event.target.files[0]);
-  };
+		profilecsv.readAsText(event.target.files[0]);
+	};
 </script>
 
 <div class="header">
@@ -117,7 +122,6 @@
 		cursor: pointer;
 	}
 
-	/* Larger settings icon without any padding or white background */
 	.settings-icon {
 		width: 30px;
 		height: 30px;

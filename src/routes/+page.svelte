@@ -9,26 +9,31 @@
 
 	$: profiles.subscribe((value) => (profileList = value));
 
+	// Select a stringer profile and navigate to the stringing menu
 	function selectStringer(profile, index) {
 		selectedProfile.set(profile);
 		selectedProfileIndex.set(index);
 		goto('/stringing-menu');
 	}
 
+	// Go to the new stringer page
 	function newStringer() {
 		goto('/new-stringer');
 	}
 
+	// Go to the update stringer page
 	function editStringer(index) {
 		selectedProfileIndex.set(index);
 		goto('/update-stringer');
 	}
 
+	// Show the delete confirmation modal
 	function confirmDeleteProfile(index) {
 		profileIndexToDelete = index; // Set the profile to delete
 		showConfirmDelete = true; // Show the confirmation modal
 	}
 
+	// Delete the selected profile
 	function deleteProfile() {
 		if (profileIndexToDelete !== null) {
 			profiles.update(currentProfiles => {
@@ -40,6 +45,7 @@
 		}
 	}
 
+	// Cancel the delete operation
 	function cancelDelete() {
 		profileIndexToDelete = null;
 		showConfirmDelete = false;

@@ -13,6 +13,7 @@
   let volume = 50; // Default volume level
 	let pullerSpeed = 50; // Default puller speed level
 
+  // Save the new profile to the store
 	function saveProfile() {
 		if (!name.trim()) {
 			nameError = 'Name is required';
@@ -143,9 +144,9 @@
   }
 
   .slider {
-    width: 80%; /* Make slider larger */
+    width: 80%; 
     -webkit-appearance: none;
-    height: 12px; /* Increase slider height */
+    height: 12px; 
     background: #ddd;
     border-radius: 5px;
     outline: none;
@@ -159,9 +160,9 @@
   .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 24px; /* Make thumb larger */
+    width: 24px; 
     height: 24px;
-    background: #fff; /* White thumb for contrast */
+    background: #fff; 
     border: 2px solid #4A90E2;
     border-radius: 50%;
     cursor: pointer;
@@ -189,7 +190,7 @@
   }
 
   .slider-input {
-    width: 60px; /* Make input box smaller */
+    width: 60px; 
     text-align: center;
   }
 

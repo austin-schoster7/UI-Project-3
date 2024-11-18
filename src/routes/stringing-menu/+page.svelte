@@ -375,12 +375,12 @@
 		color: #333;
 		border: none;
 		border-radius: 10px;
-		padding: 1rem; /* Adjusted for consistency */
-		font-size: 1.2rem; /* Match other buttons */
+		padding: 1rem; 
+		font-size: 1.2rem; 
 		cursor: pointer;
 		transition: background-color 0.3s ease;
-		width: 355px; /* Specific size for this button */
-		margin-right: 65px; /* Keep the specific alignment */
+		width: 355px; 
+		margin-right: 65px; 
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -392,11 +392,11 @@
 	}
 
 	.clearButton {
-		width: 355px; /* Match the width of the Set Tension button */
+		width: 355px; 
 		margin-top: 10px;
 		padding: 1rem;
 		font-size: 1rem;
-		background-color: #ff6666; /* Red to indicate clearing action */
+		background-color: #ff6666; 
 		border: none;
 		border-radius: 10px;
 		cursor: pointer;
@@ -409,7 +409,7 @@
 	}
 
 	.clearButton:hover {
-		background-color: #e60000; /* Darker red on hover */
+		background-color: #e60000; 
 	}
 
 	/* Semi-transparent gray overlay */
@@ -419,11 +419,11 @@
 		left: 0;
 		width: 100%;
 		height: 100%;
-		background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent gray */
+		background-color: rgba(0, 0, 0, 0.5); 
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		z-index: 1000; /* Ensure it appears above other elements */
+		z-index: 1000; 
 	}
 
 	/* Confirmation popup */
@@ -435,7 +435,7 @@
 		border-radius: 10px;
 		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 		text-align: center;
-		z-index: 1100; /* Ensure it appears above the overlay */
+		z-index: 1100; 
 	}
 
 	/* Popup buttons */
@@ -447,7 +447,7 @@
 
 	.confirmButton {
 		padding: 0.5rem 1rem;
-		background-color: #4caf50; /* Green for confirmation */
+		background-color: #4caf50; 
 		border: none;
 		border-radius: 5px;
 		color: white;
@@ -456,12 +456,12 @@
 	}
 
 	.confirmButton:hover {
-		background-color: #388e3c; /* Darker green on hover */
+		background-color: #388e3c; 
 	}
 
 	.cancelButton {
 		padding: 0.5rem 1rem;
-		background-color: #f44336; /* Red for cancellation */
+		background-color: #f44336; 
 		border: none;
 		border-radius: 5px;
 		color: white;
@@ -470,7 +470,7 @@
 	}
 
 	.cancelButton:hover {
-		background-color: #d32f2f; /* Darker red on hover */
+		background-color: #d32f2f; 
 	}
 
 	.tension-place {
@@ -517,8 +517,8 @@
 	}
 
 	.function-buttons button:disabled {
-		background-color: #d0d0d0; /* Ensure all disabled buttons have a consistent gray */
-		color: #a0a0a0; /* Dim the text for disabled state */
+		background-color: #d0d0d0; 
+		color: #a0a0a0; 
 		cursor: not-allowed;
 	}
 
@@ -534,7 +534,7 @@
 	.mains-label,
 	.crosses-label {
 		font-size: 0.9rem;
-		color: #333; /* Default color */
+		color: #333; 
 		margin-top: 0.5rem;
 		transition: color 0.3s ease;
 	}
@@ -542,7 +542,7 @@
 	/* Change label to white when button is selected */
 	button.enabled .mains-label,
 	button.enabled .crosses-label {
-		color: white; /* Change to white when enabled */
+		color: white; 
 	}
 
 	/* Vertical Line in Mains Icon */
@@ -554,11 +554,11 @@
 	}
 
 	button.enabled .mains-icon .vertical-line {
-		background-color: white; /* Change to white when enabled */
+		background-color: white; 
 	}
 
 	button:disabled .mains-icon .vertical-line {
-		background-color: #a0a0a0; /* Dimmed gray for disabled state */
+		background-color: #a0a0a0; 
 	}
 
 	/* Crosses Icon */
@@ -578,11 +578,11 @@
 	}
 
 	button.enabled .crosses-icon .horizontal-line {
-		background-color: white; /* Change to white when enabled */
+		background-color: white; 
 	}
 
 	button:disabled .crosses-icon .horizontal-line {
-		background-color: #a0a0a0; /* Dimmed gray for disabled state */
+		background-color: #a0a0a0; 
 	}
 
 	.vertical-bar {
